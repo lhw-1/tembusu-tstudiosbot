@@ -1,6 +1,6 @@
 # README for Collaborators
 
-## SET UP
+## Set-up
 
 This bot is written in python, utilising the python-telegram-bot library.
 
@@ -38,6 +38,8 @@ All commands under Feature #2 are only available to administrators.
 - /approve: This allows the administrator to approve any outstanding loan requests.
 
 - /return: This allows the administrator to indicate a loan request as having been returned. Please note that this should be used AFTER the administrator has verified that the equipment has been returned - this is to ensure that the availability for each item on the list is correctly displayed.
+
+- /add: This allows tha administrator to approve a user to be able to use the equipment loaning features.
 
 ## Possible Extensions
 

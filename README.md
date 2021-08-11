@@ -15,7 +15,7 @@ In order to make a loan request, they will have to indicate:
 - Loan period (Start and End date)
 - Reason for loan request
 
-Administrators can approve loan requests using the command /approve, or indicate loans as having been returned using the command /return.
+Administrators can approve loan requests using the command /approve, or indicate loans as having been returned using the command /return. They can also approve a user using their telegram handle and the command /add.
 
 ## How to start
 
@@ -23,7 +23,7 @@ As an approved user, you can find the bot on telegram using the handle @tStudios
 
 A simple /start command will start up the bot for the user and display all possible commands.
 
-## Development Team Contact
+## Development Team Contacts
 
 For more information regarding the telegram bot, please contact:
 
