@@ -2,7 +2,9 @@
 
 ## Background
 
-This bot was created to handle equipment loan processes for the tStudios Interest Group (Tembusu Residential College).
+![photo_2021-06-15_23-31-19](https://user-images.githubusercontent.com/25716529/129040897-64a8291b-4999-415d-b886-7a43d9dfbb1c.jpg)
+
+This bot was created to handle equipment loan processes for the tStudios Interest Group, in Tembusu Residential College.
 
 ## How to use
 
