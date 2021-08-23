@@ -680,7 +680,7 @@ def approve_result(update, context):
             loansheet.update('C' + str(int(choice[1:]) + 1), username)
 
             # Set markup and message
-            query.edit_message_text(text="Request ID " + choice[1:] + " has been approved.\n\nYou can confirm the approval at:\nhttps://docs.google.com/spreadsheets/d/1SQepbLsa_cKe46A6ukQDjzcWXlJkTG-FTH5d1H11DGE/.")
+            query.edit_message_text(text="Request ID " + choice[1:] + " has been approved.\n\nYou can confirm the approval at:\n" + os.environ.get('LOANSHEET') + ".")
             query.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup([]))
 
     elif choice == "C":
@@ -850,7 +850,7 @@ def return_result(update, context):
             loansheet.update('E' + str(int(choice[1:]) + 1), username)
 
             # Set markup and message
-            query.edit_message_text(text="Request ID " + choice[1:] + " has been returned.\n\nYou can confirm that the loan has been returned at:\nhttps://docs.google.com/spreadsheets/d/1SQepbLsa_cKe46A6ukQDjzcWXlJkTG-FTH5d1H11DGE/.")
+            query.edit_message_text(text="Request ID " + choice[1:] + " has been returned.\n\nYou can confirm that the loan has been returned at:\n" + os.environ.get('LOANSHEET') + ".")
             query.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup([]))
 
     elif choice == "C":
