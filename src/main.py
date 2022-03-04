@@ -65,7 +65,7 @@ convhandler_return = ConversationHandler(
 )
 
 convhandler_openhouse = ConversationHandler(
-    entry_points = [CommandHandler('openhouse22', handler.return_openhouse)],
+    entry_points = [CommandHandler('openhouse22', handler.openhouse)],
     states = {
         OPENHOUSE_1: [CallbackQueryHandler(handler.openhouse_name)],
         OPENHOUSE_2: [CallbackQueryHandler(handler.openhouse_num)],
