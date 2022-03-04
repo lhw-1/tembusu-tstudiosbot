@@ -10,6 +10,43 @@ import datetime
 singaporetime = timezone('Asia/Singapore')
 timenow = datetime.datetime.now(singaporetime)
 
+#initial Choice for openhouse
+oh_init = InlineKeyboardMarkup([
+    [InlineKeyboardButton("Camera", callback_data="c")],
+    [InlineKeyboardButton("Light", callback_data="l")],
+    [InlineKeyboardButton("Accessories", callback_data="a")],
+    [InlineKeyboardButton("Cancel", callback_data="cancel")]
+])
+
+# Keyboard generator for any item list.
+def oh_items(list_items, index):
+    # list will be a list of strings that correspond to equipment names.
+    # Index will be the equipment index. (First item on the list has an index of 2)
+    key_len = len(list_items) + 1
+    keylist_items = [None] * (key_len)
+    for i in range(key_len):
+        if i == key_len - 1:
+            # If i is currently pointing to the last index of keylist_items, add the Back button
+            keylist_items[i] = [InlineKeyboardButton("Back", callback_data="b")]
+        else:
+            keylist_items[i] = [InlineKeyboardButton(list_items[i], callback_data="e" + format(i + index, '02d'))]
+    items = InlineKeyboardMarkup(keylist_items)
+    return items
+
+# Accessory Types
+def oh_type(list_type):
+    # list_type will be a list of strings that correspond to equipment types under "Accessories" category.
+    key_len = len(list_type) + 1
+    keylist_type = [None] * (key_len)
+    for i in range(key_len):
+        if i == key_len - 1:
+            # If i is currently pointing to the last index of keylist_camera, add the Back button
+            keylist_type[i] = [InlineKeyboardButton("Back", callback_data="b")]
+        else:
+            keylist_type[i] = [InlineKeyboardButton(list_type[i], callback_data="a" + str(i))]
+    types = InlineKeyboardMarkup(keylist_type)
+    return types
+
 # Initial Choice
 key_init = InlineKeyboardMarkup([
     [InlineKeyboardButton("Camera", callback_data="c")],
