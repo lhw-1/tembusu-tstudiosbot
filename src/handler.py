@@ -72,18 +72,17 @@ def openhouse(update, context):
         username = "@" + handle
 
     # Initial message
-    update.message.reply_text(txt.loan_txt + "Hey there! These are the equipment that are available for loan:)", reply_markup=key.oh_init)
+    update.message.reply_text(txt.loan_txt + "Hey there! These are the equipment that are available for loan to all students:)", reply_markup=key.oh_init)
 
     # Set state
     return OPENHOUSE_1
 
-def openhouse(update, context):
+def openhouse_name(update, context):
 
     # Retrieve the reply (in the form of query data) from user
     query = update.callback_query
     query.answer()
     choice = query.data
-    global current_request
     global list_equipment
     global list_cat_types
     global list_cat_count
@@ -118,16 +117,13 @@ def openhouse(update, context):
             query.message.edit_reply_markup(reply_markup=key.oh_items(list_items, list_index))
             return OPENHOUSE_1
     elif choice[0] == "e":
-        # Obtain the current equipment id
-        current_request["id"] = int(choice[1:])
         # Open the inventory sheet and get the available quantity
         invsheet = googlesheet_loan.worksheet("tStudios Equipment List")
         quantity = int(invsheet.cell(int(choice[1:]), 6).value)
         # Set message and keyboard markup according to quantity
         if quantity == 0:
             query.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup([]))
-            query.edit_message_text(text="Sorry, the item you requested is not available. Use /loan to make another request!")
-            current_request = {}
+            query.edit_message_text(text="Ye... all of this particular equipment is out on loan currently! Use /openhouse22 to another look at our stuff!")
             return ConversationHandler.END
         else:
             limit = quantity if quantity < 2 else 2
@@ -147,12 +143,10 @@ def openhouse(update, context):
     elif choice == "cancel":
         query.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup([]))
         query.edit_message_text(text="Your session has been ended. Use /openhouse22 to have another look!")
-        current_request = {}
         return ConversationHandler.END
     else:
         query.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup([]))
         query.edit_message_text(text="There was an error processing your request. Please try again.")
-        current_request = {}
         return ConversationHandler.END
 
 def openhouse_num(update, context):
@@ -161,7 +155,6 @@ def openhouse_num(update, context):
     query = update.callback_query
     query.answer()
     choice = query.data
-    global current_request
 
     # Change reply and keyboard markup according to the user's answer
     if choice == "b":
@@ -171,7 +164,6 @@ def openhouse_num(update, context):
     else:
         query.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup([]))
         query.edit_message_text(text="There was an error processing your request. Please try again.")
-        current_request = {}
         return ConversationHandler.END
 
 
