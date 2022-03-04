@@ -50,7 +50,7 @@ def start(update, context):
 
 # Function for /boop
 def boop(update, context):
-    context.bot.send_message(chat_id=update.effective_chat.id, text="... I wasn't sleeping! :(")
+    context.bot.send_message(chat_id=update.effective_chat.id, text="... I wasn't sleeping " + "\U0001F925")
 
 # Function for /contact
 def contacts(update, context):
