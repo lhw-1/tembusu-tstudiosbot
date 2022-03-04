@@ -21,6 +21,7 @@ LOAN_1, LOAN_2, LOAN_3, LOAN_4, LOAN_5, LOAN_6, LOAN_7 = range(7)
 ADD_1 = range(1)
 APPROVE_1, APPROVE_2 = range(2)
 RETURN_1, RETURN_2 = range(2)
+OPENHOUSE_1, OPENHOUSE_2 = range(2)
 
 # Conversation Handler for Loan
 convhandler_loan = ConversationHandler(
@@ -63,6 +64,15 @@ convhandler_return = ConversationHandler(
     fallbacks = [CommandHandler('return', handler.return_loan)]
 )
 
+convhandler_openhouse = ConversationHandler(
+    entry_points = [CommandHandler('openhouse22', handler.return_openhouse)],
+    states = {
+        OPENHOUSE_1: [CallbackQueryHandler(handler.openhouse_name)],
+        OPENHOUSE_2: [CallbackQueryHandler(handler.openhouse_num)],
+    },
+    fallbacks = [CommandHandler('openhouse22', handler.openhouse)]
+)
+
 # Add handlers to dispatcher
 dispatcher.add_handler(CommandHandler('start', handler.start))
 dispatcher.add_handler(CommandHandler('boop', handler.boop))
@@ -72,6 +82,7 @@ dispatcher.add_handler(convhandler_loan)
 dispatcher.add_handler(convhandler_add)
 dispatcher.add_handler(convhandler_approve)
 dispatcher.add_handler(convhandler_return)
+dispatcher.add_handler(convhandler_openhouse)
 
 # Start the webhook process
 updater.start_webhook(listen = "0.0.0.0",
