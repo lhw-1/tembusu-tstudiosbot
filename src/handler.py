@@ -122,9 +122,9 @@ def openhouse_name(update, context):
         quantity = int(invsheet.cell(int(choice[1:]), 6).value)
         # Set message and keyboard markup according to quantity
         if quantity == 0:
-            query.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup([]))
-            query.edit_message_text(text="Ye... all of this particular equipment is out on loan currently! Use /openhouse22 to have another look at our stuff " + "\U0001F601")
-            return ConversationHandler.END
+            query.edit_message_text(text="Ye... all of this particular equipment is out on loan currently " + "\U0001F622")
+            query.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Back", callback_data="b")]]))
+            return OPENHOUSE_2
         else:
             # limit = quantity if quantity < 2 else 2
             # Create the keyboard
@@ -142,7 +142,7 @@ def openhouse_name(update, context):
         return OPENHOUSE_1
     elif choice == "cancel":
         query.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup([]))
-        query.edit_message_text(text="Your session has been ended. Use /openhouse22 to have another look!")
+        query.edit_message_text(text="Alright, use /openhouse22 to have another look!")
         return ConversationHandler.END
     else:
         query.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup([]))
