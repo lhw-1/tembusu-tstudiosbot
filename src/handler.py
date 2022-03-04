@@ -28,6 +28,7 @@ googlesheet_admin = client.open_by_url(os.environ.get('ADMINSHEET'))
 username = 'N/A'
 current_request = {} # Has id, quantity, start, end, purpose
 LOAN_1, LOAN_2, LOAN_3, LOAN_4, LOAN_5, LOAN_6, LOAN_7 = range(7)
+OPENHOUSE_1, OPENHOUSE_2 = range(2)
 ADD_1 = range(1)
 APPROVE_1, APPROVE_2 = range(2)
 RETURN_1, RETURN_2 = range(2)
@@ -55,6 +56,123 @@ def boop(update, context):
 def contacts(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text=tcontacts.contacts)
 
+################################################################################################################################
+# For Open House 22: Open house
+################################################################################################################################
+
+# Function for /loan
+def openhouse(update, context):
+
+    # Set username
+    global username
+    handle = update.message.chat.username
+    if handle == '':
+        username = update.message.chat.first_name + ' ' + update.message.chat.last_name
+    else:
+        username = "@" + handle
+
+    # Initial message
+    update.message.reply_text(txt.loan_txt + "Hey there! These are the equipment that are available for loan:)", reply_markup=key.oh_init)
+
+    # Set state
+    return OPENHOUSE_1
+
+def openhouse(update, context):
+
+    # Retrieve the reply (in the form of query data) from user
+    query = update.callback_query
+    query.answer()
+    choice = query.data
+    global current_request
+    global list_equipment
+    global list_cat_types
+    global list_cat_count
+    global list_cat_index
+    global list_types
+
+    # Change reply and keyboard markup according to the user's answer
+    if choice == "c":
+        list_index = int(list_cat_index[1])
+        list_start = list_index - 1
+        list_end = list_start + int(list_cat_count[1])
+        list_items = list_equipment[list_start:list_end]
+        query.message.edit_reply_markup(reply_markup=key.oh_items(list_items, list_index))
+        return OPENHOUSE_1
+    elif choice == "l":
+        list_index = int(list_cat_index[2])
+        list_start = list_index - 1
+        list_end = list_start + int(list_cat_count[2])
+        list_items = list_equipment[list_start:list_end]
+        query.message.edit_reply_markup(reply_markup=key.oh_items(list_items, list_index))
+        return OPENHOUSE_1
+    elif choice[0] == "a":
+        if len(choice) == 1:
+            query.message.edit_reply_markup(reply_markup=key.oh_type(list_types))
+            return OPENHOUSE_1
+        else:
+            type_index = int(choice[1]) + 3
+            list_index = int(list_cat_index[type_index])
+            list_start = list_index - 1
+            list_end = list_start + int(list_cat_count[type_index])
+            list_items = list_equipment[list_start:list_end]
+            query.message.edit_reply_markup(reply_markup=key.oh_items(list_items, list_index))
+            return OPENHOUSE_1
+    elif choice[0] == "e":
+        # Obtain the current equipment id
+        current_request["id"] = int(choice[1:])
+        # Open the inventory sheet and get the available quantity
+        invsheet = googlesheet_loan.worksheet("tStudios Equipment List")
+        quantity = int(invsheet.cell(int(choice[1:]), 6).value)
+        # Set message and keyboard markup according to quantity
+        if quantity == 0:
+            query.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup([]))
+            query.edit_message_text(text="Sorry, the item you requested is not available. Use /loan to make another request!")
+            current_request = {}
+            return ConversationHandler.END
+        else:
+            limit = quantity if quantity < 2 else 2
+            # Create the keyboard
+            keylist_quantity = [None] * (limit + 1)
+            for i in range(limit + 1):
+                if i == limit:
+                    keylist_quantity[i] = [InlineKeyboardButton("Back", callback_data="b")]
+                else:
+                    keylist_quantity[i] = [InlineKeyboardButton(str(i + 1), callback_data="0" + str(i + 1))]
+            query.edit_message_text(text="We have " + str(quantity) + " available of those.")
+            query.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup(keylist_quantity))
+            return OPENHOUSE_2
+    elif choice == "b":
+        query.message.edit_reply_markup(reply_markup=key.oh_init)
+        return OPENHOUSE_1
+    elif choice == "cancel":
+        query.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup([]))
+        query.edit_message_text(text="Your session has been ended. Use /openhouse22 to have another look!")
+        current_request = {}
+        return ConversationHandler.END
+    else:
+        query.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup([]))
+        query.edit_message_text(text="There was an error processing your request. Please try again.")
+        current_request = {}
+        return ConversationHandler.END
+
+def openhouse_num(update, context):
+
+    # Retrieve the reply (in the form of query data) from user
+    query = update.callback_query
+    query.answer()
+    choice = query.data
+    global current_request
+
+    # Change reply and keyboard markup according to the user's answer
+    if choice == "b":
+        query.edit_message_text(text=txt.loan_txt + "Which kind of equipment do you wanna see?")
+        query.message.edit_reply_markup(reply_markup=key.key_init)
+        return OPENHOUSE_1
+    else:
+        query.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup([]))
+        query.edit_message_text(text="There was an error processing your request. Please try again.")
+        current_request = {}
+        return ConversationHandler.END
 
 
 ################################################################################################################################
