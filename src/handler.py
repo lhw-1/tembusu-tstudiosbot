@@ -72,7 +72,7 @@ def openhouse(update, context):
         username = "@" + handle
 
     # Initial message
-    update.message.reply_text(txt.loan_txt + "Hey there! These are the equipment that are available for loan to all students:)", reply_markup=key.oh_init)
+    update.message.reply_text("Hey there! These are the equipment that are available for loan to all students " + "\U0001F601" + "\n\nYou can check how many of each equipment are available by clicking on the equipment name!", reply_markup=key.oh_init)
 
     # Set state
     return OPENHOUSE_1
@@ -123,19 +123,19 @@ def openhouse_name(update, context):
         # Set message and keyboard markup according to quantity
         if quantity == 0:
             query.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup([]))
-            query.edit_message_text(text="Ye... all of this particular equipment is out on loan currently! Use /openhouse22 to another look at our stuff!")
+            query.edit_message_text(text="Ye... all of this particular equipment is out on loan currently! Use /openhouse22 to have another look at our stuff " + "\U0001F601")
             return ConversationHandler.END
         else:
-            limit = quantity if quantity < 2 else 2
+            # limit = quantity if quantity < 2 else 2
             # Create the keyboard
-            keylist_quantity = [None] * (limit + 1)
-            for i in range(limit + 1):
-                if i == limit:
-                    keylist_quantity[i] = [InlineKeyboardButton("Back", callback_data="b")]
-                else:
-                    keylist_quantity[i] = [InlineKeyboardButton(str(i + 1), callback_data="0" + str(i + 1))]
-            query.edit_message_text(text="We have " + str(quantity) + " available of those.")
-            query.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup(keylist_quantity))
+            # keylist_quantity = [None] * (limit + 1)
+            # for i in range(limit + 1):
+            #     if i == limit:
+            #         keylist_quantity[i] = [InlineKeyboardButton("Back", callback_data="b")]
+            #     else:
+            #         keylist_quantity[i] = [InlineKeyboardButton(str(i + 1), callback_data="0" + str(i + 1))]
+            query.edit_message_text(text="We have " + str(quantity) + " available of those!")
+            query.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Back", callback_data="b")]]))
             return OPENHOUSE_2
     elif choice == "b":
         query.message.edit_reply_markup(reply_markup=key.oh_init)
@@ -158,12 +158,12 @@ def openhouse_num(update, context):
 
     # Change reply and keyboard markup according to the user's answer
     if choice == "b":
-        query.edit_message_text(text=txt.loan_txt + "Which kind of equipment do you wanna see?")
+        query.edit_message_text(text="Which other equipment do you wanna look at?")
         query.message.edit_reply_markup(reply_markup=key.key_init)
         return OPENHOUSE_1
     else:
         query.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup([]))
-        query.edit_message_text(text="There was an error processing your request. Please try again.")
+        query.edit_message_text(text="There was an error... Please try /openhouse again, sorry!.")
         return ConversationHandler.END
 
 
